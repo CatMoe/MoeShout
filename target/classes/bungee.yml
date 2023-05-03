@@ -1,0 +1,8 @@
+name: MoeShout
+version: '0.1'
+main: catmoe.fallencrystal.moeshout.Main
+description: ❤ by CatMoe
+author: CatMoe
+depends:
+  - LuckPerms
+  - Protocolize
