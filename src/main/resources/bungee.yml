@@ -6,3 +6,4 @@ author: CatMoe
 depends:
   - LuckPerms
   - Protocolize
+  - LiteBans

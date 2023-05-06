@@ -9,11 +9,9 @@ class IgnoreCommand(private val sender: CommandSender, private val args: Array<o
 
     val proxy = ProxyServer.getInstance()
     fun execute() {
-        if (!senderIsPlayer(sender)) return
+        if (sender !is ProxiedPlayer) return
         val target = proxy.getPlayer(args!![2])!!
-        IgnorePlayers.addIgnorePlayers(sender as ProxiedPlayer, target)
+        IgnorePlayers.addIgnorePlayers(sender, target)
     }
-
-    private fun senderIsPlayer(sender: CommandSender): Boolean { return sender is ProxiedPlayer }
 
 }

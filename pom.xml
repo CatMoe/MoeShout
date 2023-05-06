@@ -104,6 +104,10 @@
           <id>exceptionflug</id>
           <url>https://mvn.exceptionflug.de/repository/exceptionflug-public/</url>
       </repository>
+      <repository>
+          <id>jitpack.io</id>
+          <url>https://jitpack.io</url>
+      </repository>
   </repositories>
 
   <dependencies>
@@ -141,6 +145,12 @@
           <artifactId>kotlin-test</artifactId>
           <version>${kotlin.version}</version>
           <scope>test</scope>
+      </dependency>
+      <dependency>
+          <groupId>com.gitlab.ruany</groupId>
+          <artifactId>LiteBansAPI</artifactId>
+          <version>0.3.5</version>
+          <scope>provided</scope>
       </dependency>
   </dependencies>
 </project>

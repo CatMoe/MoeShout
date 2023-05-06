@@ -9,6 +9,7 @@ class JumpCommand(private val sender: CommandSender, private val args: Array<out
     val proxy = ProxyServer.getInstance()
 
     fun execute() {
+        if (sender !is ProxiedPlayer) return
         val player = proxy.getPlayer(args!![2])
         val uuid = args[3]
     }

@@ -2,7 +2,6 @@ package catmoe.fallencrystal.moeshout.menu
 
 import catmoe.fallencrystal.moeshout.util.cache.DisplayCache
 import catmoe.fallencrystal.moeshout.util.cache.IgnorePlayers
-import catmoe.fallencrystal.moeshout.util.cache.OfflineDisplayCache
 import catmoe.fallencrystal.moeshout.util.menu.ForceFormatCode
 import catmoe.fallencrystal.moeshout.util.menu.GUIBuilder
 import catmoe.fallencrystal.moeshout.util.menu.ItemBuilder
@@ -12,12 +11,12 @@ import dev.simplix.protocolize.data.ItemType
 import dev.simplix.protocolize.data.inventory.InventoryType
 import net.md_5.bungee.api.connection.ProxiedPlayer
 
-class IgnoreMenu(private val yourself: ProxiedPlayer) : GUIBuilder() {
+class IgnoreMenu(yourself: ProxiedPlayer) : GUIBuilder() {
 
     private val playersCache = Caffeine.newBuilder().build<Int, ProxiedPlayer>()
 
-    val ignoredCache = IgnorePlayers.getIgnorePlayers(yourself)
-    val invType = if (ignoredCache.size < 10) {
+    private val ignoredCache = IgnorePlayers.getIgnorePlayers(yourself)
+    private val invType = if (ignoredCache.size < 10) {
         InventoryType.GENERIC_9X2
     } else if (ignoredCache.size < 19) {
         InventoryType.GENERIC_9X3
@@ -40,15 +39,11 @@ class IgnoreMenu(private val yourself: ProxiedPlayer) : GUIBuilder() {
     }
 
     private fun setPlayerSlot(slot: Int, p: ProxiedPlayer) {
-        val itemName = if (p.isConnected) { "${getDisplayName(p)} &7[&a在线&7]" } else { "${getDisplayName(p)} &7[&c离线&7]" }
+        val itemName = DisplayCache.getDisplayName(p)
         setItem(slot, ItemBuilder(ItemType.PLAYER_HEAD).name(ForceFormatCode.replaceFormat(itemName))
             .lore(ForceFormatCode.replaceFormat("&e点击来解除屏蔽!"))
             .build())
         playersCache.put(slot, p)
-    }
-
-    private fun getDisplayName(p: ProxiedPlayer): String {
-        return if (p.isConnected) { DisplayCache.getDisplayName(p) } else { OfflineDisplayCache.getOfflineName(p.uniqueId) }
     }
 
     override fun onClick(click: InventoryClick?) {

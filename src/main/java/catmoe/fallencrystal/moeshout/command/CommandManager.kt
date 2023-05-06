@@ -12,6 +12,7 @@ class CommandManager(name: String?, permission: String?, vararg aliases: String?
     override fun execute(sender: CommandSender?, args: Array<out String>?) {
         if (args?.get(1).equals(ignoreCase = true, other = "ignore")) { val ignore = IgnoreCommand(sender!!, args); ignore.execute() }
         if (args?.get(1).equals("JumpTo")) { val jump = JumpCommand(sender!!, args); jump.execute() }
+        if (args?.get(1).equals(ignoreCase = true, other = "mute")) { val mute = MuteCommand(sender!!, args); mute.execute() }
     }
 
     override fun onTabComplete(sender: CommandSender?, args: Array<out String>?): MutableIterable<String> {
