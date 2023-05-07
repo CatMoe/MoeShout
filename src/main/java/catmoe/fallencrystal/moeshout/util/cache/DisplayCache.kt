@@ -5,7 +5,6 @@ import net.luckperms.api.LuckPermsProvider
 import net.md_5.bungee.api.connection.ProxiedPlayer
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.collections.HashMap
 
 object DisplayCache {
     private const val prefixCacheExpire = 30
@@ -15,12 +14,6 @@ object DisplayCache {
     private val suffixCache = Caffeine.newBuilder().expireAfterWrite(suffixCacheExpire.toLong(), TimeUnit.SECONDS).build<UUID, String>()
 
     private val offlineDisplayName = Caffeine.newBuilder().build<UUID, String>()
-
-    // Nicked player list
-    private val nickedList = mutableListOf<ProxiedPlayer>()
-
-    // Nicked player prefix/nickname/suffix
-    private val nickname = Caffeine.newBuilder().build<ProxiedPlayer, String>()
 
     @Synchronized
     fun getPrefix(uuid: UUID): String? {
@@ -55,7 +48,7 @@ object DisplayCache {
 
     @Synchronized
     fun getDisplayName(p: ProxiedPlayer): String {
-        if (isNicked(p)) return getNickname(p)
+        if (Nick.isNicked(p)) return Nick.getNickDisplayName(p)
         if (!p.isConnected) return getOfflineName(p.uniqueId)
         val uuid = p.uniqueId
         val prefix = getPrefix(uuid)
@@ -76,33 +69,6 @@ object DisplayCache {
         val cache = offlineDisplayName
         if (cache.getIfPresent(uuid) != null) return
         cache.invalidate(uuid)
-    }
-
-    fun isNicked(player: ProxiedPlayer): Boolean { return nickedList.contains(player) }
-
-    fun setNickname(player: ProxiedPlayer, name: String) {
-        if (nickedList.contains(player) && nickname.getIfPresent(player) != null) unNickname(player)
-        nickname.put(player, name)
-        nickedList.add(player)
-    }
-
-    fun unNickname(player: ProxiedPlayer) {
-        nickedList.remove(player)
-        nickname.invalidate(player)
-    }
-
-    fun getNickname(player: ProxiedPlayer): String {
-        if (!nickedList.contains(player)) return ""
-        return if (nickname.getIfPresent(player) != null) nickname.getIfPresent(player)!! else ""
-    }
-
-    fun getDisplayNameWithoutNick(player: ProxiedPlayer): String {
-        if (!nickedList.contains(player)) throw NullPointerException("player don't have nickname! use getDisplayName to get better performance.")
-        val uuid = player.uniqueId
-        val prefix = getPrefix(uuid)
-        val suffix = getSuffix(uuid)
-        val name = player.name
-        return prefix + name + suffix
     }
 
 }

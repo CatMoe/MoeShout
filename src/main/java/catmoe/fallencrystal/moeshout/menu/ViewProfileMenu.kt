@@ -3,6 +3,7 @@ package catmoe.fallencrystal.moeshout.menu
 import catmoe.fallencrystal.moeshout.util.cache.DisplayCache
 import catmoe.fallencrystal.moeshout.util.cache.IgnorePlayers
 import catmoe.fallencrystal.moeshout.util.cache.Mute
+import catmoe.fallencrystal.moeshout.util.cache.Nick
 import catmoe.fallencrystal.moeshout.util.menu.ForceFormatCode
 import catmoe.fallencrystal.moeshout.util.menu.GUIBuilder
 import catmoe.fallencrystal.moeshout.util.menu.ItemBuilder
@@ -38,7 +39,7 @@ class ViewProfileMenu(private val target: ProxiedPlayer, private val yourself: P
         val slot = 13
         val item = ItemType.PLAYER_HEAD
         // 当玩家在匿名状态下 会显示是并且加上原来的名字 如果玩家未匿名使用getDisplayNameWithoutNick 则会抛出NPE(NullPointerException)
-        val nick = if (DisplayCache.isNicked(target)) "&a是  &7[ ${DisplayCache.getDisplayNameWithoutNick(target)} &7]" else "&c否"
+        val nick = if (Nick.isNicked(target)) "&a是  &7[ ${Nick.getDisplayNameWithoutNick(target)} &7]" else "&c否"
         val server = target.server.info.name
         val protocolPlayer = Protocolize.playerProvider().player(target.uniqueId)
         val location = protocolPlayer.location()
@@ -80,7 +81,7 @@ class ViewProfileMenu(private val target: ProxiedPlayer, private val yourself: P
         }
 
         // unNick
-        if (DisplayCache.isNicked(target)) {
+        if (Nick.isNicked(target)) {
             setItem(unNickSlot, ItemBuilder(ItemType.NAME_TAG).name("&b取消匿名").build())
         } else {
             setItem(unNickSlot, ItemBuilder(ItemType.BARRIER).name("&b取消匿名").lore(ca("&c此玩家没有匿名!")).build())
@@ -92,7 +93,7 @@ class ViewProfileMenu(private val target: ProxiedPlayer, private val yourself: P
         val item = click.clickedItem().itemType()
         // unNick
         if (slot == unNickSlot  && item == ItemType.NAME_TAG) {
-            if (DisplayCache.isNicked(target)) { DisplayCache.unNickname(target); open(yourself) } else { playerIsNotNicked(); open(yourself) }
+            if (Nick.isNicked(target)) { Nick.unNick(target); open(yourself) } else { playerIsNotNicked(); open(yourself) }
         }
         // toServer
         else if (slot == serverSlot && item == ItemType.ENDER_EYE) { yourself.connect(target.server.info); open(yourself) }

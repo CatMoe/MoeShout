@@ -19,4 +19,8 @@ class ViewProfileCommand(private val sender: CommandSender, private val args: Ar
             menu.open(sender)
         }
     }
+
+    private fun targetNotOnline() {
+        TODO()
+    }
 }

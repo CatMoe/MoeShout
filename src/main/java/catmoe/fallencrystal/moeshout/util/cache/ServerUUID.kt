@@ -27,6 +27,12 @@ object ServerUUID {
         return if (cache != null && cache.first == uuid)  cache.second else null
     }
 
+    fun getServer(player: ProxiedPlayer, uuid: String): ServerInfo? {
+        val cache = serverUUIDCache.getIfPresent(player)
+        if (!player.isConnected) return null
+        return if (cache != null && cache.first.toString() == uuid) cache.second else null
+    }
+
     fun invalidateServer(player: ProxiedPlayer) { serverUUIDCache.invalidate(player) }
 
 }

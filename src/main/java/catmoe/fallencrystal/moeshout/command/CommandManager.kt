@@ -11,15 +11,19 @@ class CommandManager(name: String?, permission: String?, vararg aliases: String?
 
     override fun execute(sender: CommandSender?, args: Array<out String>?) {
         if (args?.get(1).equals(ignoreCase = true, other = "ignore")) { val ignore = IgnoreCommand(sender!!, args); ignore.execute() }
-        if (args?.get(1).equals("JumpTo")) { val jump = JumpCommand(sender!!, args); jump.execute() }
-        if (args?.get(1).equals(ignoreCase = true, other = "mute")) { val mute = MuteCommand(sender!!, args); mute.execute() }
-        if (args?.get(1).equals("ViewProfile")) { val vp = ViewProfileCommand(sender!!, args); vp.execute() }
-        if (args?.get(1).equals(ignoreCase = true, other = "unmute")) { val unmute = UnMuteCommand(sender!!, args); unmute.execute() }
+        else if (args?.get(1).equals("JumpTo")) { val jump = JumpCommand(sender!!, args); jump.execute() }
+        else if (args?.get(1).equals(ignoreCase = true, other = "mute")) { val mute = MuteCommand(sender!!, args); mute.execute() }
+        else if (args?.get(1).equals("ViewProfile")) { val vp = ViewProfileCommand(sender!!, args); vp.execute() }
+        else if (args?.get(1).equals(ignoreCase = true, other = "unmute")) { val unmute = UnMuteCommand(sender!!, args); unmute.execute() }
     }
 
     override fun onTabComplete(sender: CommandSender?, args: Array<out String>?): MutableIterable<String> {
         TODO("Not yet implemented")
     }
 
-    private fun isPlayer(player: String): Boolean { return proxy.getPlayer(player) != null }
+    private fun MessageBuilder(startIndex: Int, args: Array<out String>?): String {
+        val message = StringBuilder()
+        for (arg in startIndex until args!!.size) { message.append(args[arg]).append(" ") }
+        return message as String
+    }
 }
